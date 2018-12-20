@@ -22,6 +22,7 @@ import ExplodingHeightRetainer from './exploding-height-retainer'
 import ExplodingMeta from './exploding-meta/container'
 import LongPressable from './long-pressable'
 import MessagePopup from '../message-popup'
+import PendingPaymentBackground from '../account-payment/pending-background'
 import ReactButton from '../react-button/container'
 import ReactionsRow from '../reactions-row/container'
 import SendIndicator from './send-indicator'
@@ -367,8 +368,9 @@ class _WrapperMessage extends React.Component<Props & Kb.OverlayParentProps, Sta
     // 1. Haven't mounted it yet
     // 2. Have mounted but its hidden w/ css
     // TODO cleaner way to do this, or speedup react button maybe
+    let result
     if (this.props.decorate && !exploded) {
-      return (
+      result = (
         <Kb.Box2 key="messageAndButtons" direction="horizontal" fullWidth={true}>
           {maybeExplodedChild}
           <Kb.Box2 direction="horizontal" style={this._menuAreaStyle(exploded, exploding)}>
@@ -414,7 +416,7 @@ class _WrapperMessage extends React.Component<Props & Kb.OverlayParentProps, Sta
       )
     } else if (exploding) {
       // extra box so the hierarchy stays the same when exploding or you'll remount
-      return (
+      result = (
         <Kb.Box2 key="messageAndButtons" direction="horizontal" fullWidth={true}>
           {maybeExplodedChild}
           <Kb.Box2 direction="horizontal" style={this._menuAreaStyle(exploded, exploding)}>
@@ -427,8 +429,11 @@ class _WrapperMessage extends React.Component<Props & Kb.OverlayParentProps, Sta
         </Kb.Box2>
       )
     } else {
-      return maybeExplodedChild
+      result = maybeExplodedChild
     }
+
+    const resultWrapped = <PendingPaymentBackground>{result}</PendingPaymentBackground>
+    return resultWrapped
   }
 
   render() {
